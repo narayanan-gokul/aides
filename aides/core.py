@@ -296,8 +296,7 @@ def update_json(file_path, key_path, value, default=None):
         """Navigate and update the dictionary."""
         for key in keys[:-1]:
             if key not in d or not isinstance(d[key], dict):
-                msg = f"Path '{
-                    '.'.join(keys[:-1])}' does not exist or is not a dict."
+                msg = f"Path '{'.'.join(keys[:-1])}' does not exist or is not a dict."
                 raise KeyError(msg)
             d = d[key]
         if keys[-1] in d:
@@ -352,7 +351,8 @@ def read_gsheet(sheet_id, sheet_name):
         pd.DataFrame: Data read from the specified Google Sheet.
     """
     url = f"https://docs.google.com/spreadsheets/d/{
-        sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
+        sheet_id
+    }/gviz/tq?tqx=out:csv&sheet={sheet_name}"
     return pd.read_csv(url)
 
 
@@ -457,8 +457,7 @@ def run_concurrent(func, args_list, chunksize=None, *, use_threads=False):
     with executorclass() as executor:
         tq = tqdm(
             total=len(args_list),
-            desc=f"Processing {
-                  func.__name__}",
+            desc=f"Processing {func.__name__}",
             unit="task",
         )
         # Submit tasks and map futures to indices

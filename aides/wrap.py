@@ -1,4 +1,4 @@
-"""lass."""
+"""wrap"""
 
 import logging
 import sqlite3
@@ -10,7 +10,7 @@ from azure.storage.blob import BlobServiceClient
 from google.cloud import storage
 from playwright.async_api import TimeoutError, async_playwright
 
-from core import make_path
+from .core import make_path
 
 logger = logging.getLogger(__name__)
 
@@ -529,8 +529,7 @@ class GCS:
         Returns:
             str: GCS URL of the uploaded file.
         """
-        self.client_gcs.bucket(bucket).blob(
-            key).upload_from_filename(file_path)
+        self.client_gcs.bucket(bucket).blob(key).upload_from_filename(file_path)
         return f"gs://{bucket}/{key}"
 
     def download_gcs(self, file_path, bucket, key):
@@ -544,8 +543,7 @@ class GCS:
         Returns:
             (str): Local file path of downloaded file.
         """
-        self.client_gcs.bucket(bucket).blob(
-            key).download_to_filename(file_path)
+        self.client_gcs.bucket(bucket).blob(key).download_to_filename(file_path)
         return file_path
 
     def delete_gcs(self, bucket, key):
@@ -580,8 +578,7 @@ class ACS:
         Args:
             connection_string (str): ACS Connection string.
         """
-        self.client_acs = BlobServiceClient.from_connection_string(
-            connection_string)
+        self.client_acs = BlobServiceClient.from_connection_string(connection_string)
 
     def list_acs(self, bucket):
         """List all objects in a ACS bucket.
@@ -608,8 +605,7 @@ class ACS:
         Returns:
             str: ACS URL of the uploaded file.
         """
-        client_obj = self.client_acs.get_blob_client(
-            container=bucket, blob=key)
+        client_obj = self.client_acs.get_blob_client(container=bucket, blob=key)
         with make_path(file_path).open("rb") as data:
             client_obj.upload_blob(data)
         return client_obj.url
@@ -625,8 +621,7 @@ class ACS:
         Returns:
             (str): Local file path of downloaded file.
         """
-        client_obj = self.client_acs.get_blob_client(
-            container=bucket, blob=key)
+        client_obj = self.client_acs.get_blob_client(container=bucket, blob=key)
         with make_path(file_path).open("wb") as obj:
             obj.write(client_obj.download_blob().readall())
         return file_path
@@ -641,5 +636,4 @@ class ACS:
         Returns:
             None
         """
-        self.client_acs.get_blob_client(
-            container=bucket, blob=key).delete_blob()
+        self.client_acs.get_blob_client(container=bucket, blob=key).delete_blob()
